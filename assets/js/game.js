@@ -34,10 +34,6 @@ var enemies = [
     }
 ];
 
-var randomRoll = () => {
-    return Math.random() < 0.5;
-};
-
 var choice = () => {
     var promptFight = window.prompt("Would you likt to fight or skip this battle?\nEnter fight or skip to choose.");
 
@@ -67,7 +63,7 @@ var attack = (attacker, target) => {
 
 var flury = (enemy) => {
     // Who attacks whom 50/50
-    if (randomRoll) {
+    if (Math.random() < 0.5) {
         attack(player, enemy);
     } else {
         attack(enemy, player);
@@ -75,8 +71,8 @@ var flury = (enemy) => {
 };
 
 var isKnockedOut = (fighter) => {
-    console.log(`Health of ${fighter['name']} = ${fighter['health']}`);
-    return fighter['health'] <= 0;
+    console.log(`Health of ${fighter['name']} = ${fighter['currentHealth']}`);
+    return fighter['currentHealth'] <= 0;
 };
 
 var fight = (enemy) => {
@@ -84,7 +80,7 @@ var fight = (enemy) => {
         flury(enemy);
     };
 
-    var winner = player['health'] > 0 ? player : enemy;
+    var winner = player['currentHealth'] > 0 ? player : enemy;
 
     console.log(`${winner['name']} won the fight!`)
 
