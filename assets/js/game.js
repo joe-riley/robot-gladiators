@@ -7,7 +7,7 @@ var player = {
     "health": 100,
     "currentHealth": 100,
     "attack": 10,
-    "money": 0
+    "money": 20
 }
 
 var enemies = [
@@ -15,18 +15,18 @@ var enemies = [
         "name": "Joeboto",
         "health": 50,
         "currentHealth": 50,
-        "attack": 12,
+        "attack": 9,
         "prize": 5
     },
     {
         "name": "Andy Android",
         "health": 25,
         "currentHealth": 25,
-        "attack": 16,
+        "attack": 12,
         "prize": 7
     },
     {
-        "name": "BeeBop",
+        "name": "bE3b0p",
         "health": 60,
         "currentHealth": 60,
         "attack": 9,
@@ -35,23 +35,22 @@ var enemies = [
 ];
 
 var choice = () => {
-    var promptFight = window.prompt("Would you likt to fight or skip this battle?\nEnter fight or skip to choose.");
+    var promptFight = window.prompt("Would you like to fight or skip this battle?\nEnter fight or skip to choose.");
 
     if (promptFight.toLowerCase() === 'fight') {
-        // var names = [];
-        // window.prompt(`Choose a fighter. Your choices are:\n`)
-        fight(enemies[1]);
+        tournament();
     } else if (promptFight.toLowerCase() === 'skip') {
         var confirmSkip = window.confirm("Are you sure you want to skip? This will cost you $2.00.");
 
         if (confirmSkip) {
             player['money'] -= 2;
             window.alert(`${player['name']} has chosen to skip the fight! This has cost $2.00`);
+            choice();
         } else {
             choice();
         }
     } else {
-        window.alert("You need to pick a valid toption. Please try again.");
+        window.alert("You need to pick a valid option. Please try again.");
         choice();
     }
 };
@@ -75,19 +74,33 @@ var isKnockedOut = (fighter) => {
     return fighter['currentHealth'] <= 0;
 };
 
-var fight = (enemy) => {
+var round = (enemy) => {
     while (!isKnockedOut(player) && !isKnockedOut(enemy)) {
         flury(enemy);
     };
 
     var winner = player['currentHealth'] > 0 ? player : enemy;
 
-    console.log(`${winner['name']} won the fight!`)
+    return winner;
+};
 
-    //reset fighters for next fight
-    player['currentHealth'] = player['health'];
-    enemy['currentHealth'] = enemy['health'];
+var tournament = () => {
+    for (var i = 0; i < enemies.length; i++) {
+        enemies[i].currentHealth = enemies[i].health;
+        window.alert(`Welcome to round ${i + 1}\nThe challenger, ${player.name} will be fighting ${enemies[i].name}`);
+        var winner = round(enemies[i]);
 
+        //If the player wins he gets some $$
+        if (winner === player) {
+            window.alert(`${player.name} has won round ${i + 1}.`);
+            player.money += enemies[i].prize;
+        } else {
+            window.alert("You have lost your robot in battle! Game Over!");
+            break;
+        }
+
+        player.currentHealth = player.health;
+    };
 };
 
 choice();
