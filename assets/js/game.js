@@ -1,4 +1,8 @@
 
+var randomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
 var player = {
     "name": null,
     "health": 100,
@@ -10,26 +14,31 @@ var player = {
 var enemies = [
     {
         "name": "Joeboto",
-        "health": 50,
-        "currentHealth": 50,
-        "attack": 9,
-        "prize": 5
+        "health": randomNumber(40, 60),
+        "currentHealth": 0,
+        "attack": randomNumber(4, 9),
+        "prize": randomNumber(3, 20) 
     },
     {
         "name": "Andy Android",
-        "health": 25,
-        "currentHealth": 25,
-        "attack": 12,
-        "prize": 7
+        "health": randomNumber(40, 60),
+        "currentHealth": 0,
+        "attack": randomNumber(3, 11),
+        "prize": randomNumber(6, 9)
     },
     {
         "name": "bE3b0p",
-        "health": 60,
-        "currentHealth": 60,
-        "attack": 9,
-        "prize": 4
+        "health": randomNumber(40, 60),
+        "currentHealth": 0,
+        "attack": randomNumber(1, 16),
+        "prize": randomNumber(2, 26)
     }
 ];
+
+// initialize enemy attributes
+enemies.forEach(enemy => {
+    enemy.currentHealth = enemy.health;
+});
 
 window.alert("Welcome to Robot Gladiators!");
 
@@ -136,7 +145,7 @@ var attack = (attacker, target) => {
 
 var flury = (enemy) => {
     // Who attacks whom 50/50
-    if (Math.random() < 0.5) {
+    if (randomNumber(1, 11) < 5) {
         attack(player, enemy);
     } else {
         attack(enemy, player);
