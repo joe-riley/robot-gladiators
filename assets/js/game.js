@@ -1,9 +1,6 @@
-window.alert("Welcome to Robot Gladiators!");
-
-var playerName = window.prompt("What is your robot's name?");
 
 var player = {
-    "name": playerName,
+    "name": null,
     "health": 100,
     "currentHealth": 100,
     "attack": 10,
@@ -34,24 +31,101 @@ var enemies = [
     }
 ];
 
-var choice = () => {
-    var promptFight = window.prompt("Would you like to fight or skip this battle?\nEnter fight or skip to choose.");
+window.alert("Welcome to Robot Gladiators!");
 
-    if (promptFight.toLowerCase() === 'fight') {
+var createPlayerRobot = () => {
+    while (player.name === null) {
+        var value = window.prompt("What is your robot's name?");
+            console.log(value);
+        if (value) {
+            player.name = value;
+        } else {
+            window.alert("You must name your robot.");
+            createPlayerRobot();
+        }
+    }
+}
+
+createPlayerRobot();
+
+var startGame = () => {
+    var fightOrShop = window.prompt("Would you like to go to the store or go to the arena?\n\tType fight, shop or quit.");
+    console.log(fightOrShop);
+    if (fightOrShop && fightOrShop.toLowerCase() === 'fight') {
+        fight(); 
+    } else if (fightOrShop && fightOrShop.toLowerCase() === 'shop') {
+        shop(); 
+    } else if (fightOrShop && fightOrShop.toLowerCase() === 'quit') {
+        quit(); 
+    } else {
+        window.alert("You need to pick a valid option. Please try again.");
+        startGame();
+    }
+}
+
+var shop = () => {
+    var promptStore = window.prompt("For 3 dollars you can refill your health to full or upgrade your attack by 5.\nAvailable options are refill, upgrade, leave (to go back to the main menu) or quit the game.");
+    if (promptStore && promptStore.toLowerCase() === 'refill') {
+        if (player.currentHealth === player.health) {
+            window.alert("Your bot's health is already full. Now go fight.");
+        } else {
+            player.currentHealth = player.health;
+            window.alert(`Your bot's health is now full at ${player.currentHealth}`);
+        }
+        startGame();
+    } else if (promptStore && promptStore.toLowerCase() === 'upgrade') {
+        if (player.attack >= 100) {
+            window.alert("Your bot's attack is maxed out and could punch through the earth with a little luck.");
+        } else {
+            player.attack += 10;
+            window.alert(`${player.name}'s attack is now ${player.attack}. Go get 'em tiger... bot.`);
+        }
+        startGame();
+    } else if (promptStore && promptStore.toLowerCase() === 'leave') {
+        startGame();
+    } else if (promptStore && promptStore.toLowerCase() === 'quit') {
+        quit(); 
+    } else {
+        window.alert("You need to pick a valid option. Please try again.");
+        shop();
+    }
+
+}
+
+var quit = () => {
+    var again = window.confirm("Would you like to return to the main menu?");
+
+    if (again) {
+        fight();
+    } else {
+        var confirmExit = window.confirm("Ok, if you change your mind you can refresh the page and start all over.");
+        if (!confirmExit) {
+            fight();
+        } else {
+            window.alert("Have a nice day!");
+            process.exit(0);
+        }
+    };
+}
+
+var fight = () => {
+    var promptFight = window.prompt("Would you like to fight or skip this battle?\nAvailable options are fight, skip and quit.", '');
+
+    if (promptFight && promptFight.toLowerCase() === 'fight') {
         tournament();
-    } else if (promptFight.toLowerCase() === 'skip') {
+    } else if (promptFight && promptFight.toLowerCase() === 'skip') {
         var confirmSkip = window.confirm("Are you sure you want to skip? This will cost you $2.00.");
 
         if (confirmSkip) {
             player['money'] -= 2;
             window.alert(`${player['name']} has chosen to skip the fight! This has cost $2.00`);
-            choice();
-        } else {
-            choice();
-        }
+        }         
+        startGame();
+    } else if (promptFight && fightOrShop.toLowerCase() === 'quit') {
+        quit(); 
     } else {
         window.alert("You need to pick a valid option. Please try again.");
-        choice();
+        fight();
     }
 };
 
@@ -95,12 +169,12 @@ var tournament = () => {
             window.alert(`${player.name} has won round ${i + 1}.`);
             player.money += enemies[i].prize;
         } else {
-            window.alert("You have lost your robot in battle! Game Over!");
+            window.alert("You have lost your robot in battle! Game Over!\nRefresh the page and create a new bot.");
             break;
         }
-
-        player.currentHealth = player.health;
     };
+
+    quit();
 };
 
-choice();
+startGame();
